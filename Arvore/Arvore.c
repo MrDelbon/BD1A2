@@ -118,7 +118,7 @@ void menu(void){
 int main(){
 
     NoArv *busca, *raiz = NULL;
-    int opcao, valor;
+    int opcao, opcao2, valor;
 
     do{
         menu();
@@ -127,12 +127,36 @@ int main(){
         switch(opcao){
         
         case 1:
-        	system("cls");
-            printf("\n\tDigite um valor: ");
-            scanf("%d", &valor);
-            inserir(&raiz, valor);
-            printf("\n\tElemento %d inserido, qualquer tecla para voltar ao menu\n\t", valor);
-			fflush(stdin); getch();
+        	do{
+				system("cls");
+				printf("\t   0 - Retornar ao menu\n");
+		    	printf("\t   1 - Inserir Aleatoriamente\n");
+		    	printf("\t   2 - Inserir Manualmente\n");
+		    	scanf("%d", &opcao2);
+				switch(opcao2){
+			    	case 1:
+			    		system("cls");
+			        	printf("\n\tFuncao em desenvolvimento");
+			        	fflush(stdin);
+						getch();
+						break;	
+					case 2:
+						system("cls");
+			            printf("\n\tDigite um valor: ");
+						scanf("%d", &valor);
+						inserir(&raiz, valor);
+						printf("\n\tElemento %d inserido, qualquer tecla para voltar ao menu de insercao\n\t", valor);
+						fflush(stdin);
+						getch();
+						break;
+				    default:
+		            	if(opcao2 != 0){
+            				printf("\n\tOpcao invalida!!!\n");
+			            	fflush(stdin);
+							getch();
+						}
+				}
+			}while(opcao2 != 0);
             break;    
         case 2:
         	system("cls");
@@ -146,7 +170,8 @@ int main(){
             imprimir_postorder(raiz);
             printf("\n");
             printf("\n\tImpressao realizada, pressione qualquer tecla para voltar ao menu\n\t");
-			fflush(stdin); getch();
+			fflush(stdin);
+			getch();
             break;
         case 3:
         	system("cls");
@@ -158,7 +183,8 @@ int main(){
             else
                 printf("\n\tValor nao encontrado!\n");
             printf("\n\tPressione qualquer tecla para voltar ao menu\n\t");
-			fflush(stdin); getch();
+			fflush(stdin);
+			getch();
             break;
         case 4:
         	system("cls");
@@ -166,11 +192,15 @@ int main(){
             scanf("%d", &valor);
             raiz = remover(raiz, valor);
             printf("\n\tPressione qualquer tecla para voltar ao menu\n\t");
-			fflush(stdin); getch();
+			fflush(stdin);
+			getch();
             break;
         default:
-            if(opcao != 0)
+            if(opcao != 0){
             	printf("\n\tOpcao invalida!!!\n");
+            	fflush(stdin);
+				getch();
+			}
         }
     }while(opcao != 0);
 
