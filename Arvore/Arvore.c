@@ -6,39 +6,7 @@ typedef struct no{
     struct no *direita, *esquerda;
 }NoArv;
 
-NoArv* inserir_versao_1(NoArv *raiz, int num){
-    if(raiz == NULL){
-        NoArv *aux = malloc(sizeof(NoArv));
-        aux->valor = num;
-        aux->esquerda = NULL;
-        aux->direita = NULL;
-        return aux;
-    }
-    else{
-        if(num < raiz->valor)
-            raiz->esquerda = inserir_versao_1(raiz->esquerda, num);
-        else
-            raiz->direita = inserir_versao_1(raiz->direita, num);
-        return raiz;
-    }
-}
-
-void inserir_versao_2(NoArv **raiz, int num){
-    if(*raiz == NULL){
-        *raiz = malloc(sizeof(NoArv));
-        (*raiz)->valor = num;
-        (*raiz)->esquerda = NULL;
-        (*raiz)->direita = NULL;
-    }
-    else{
-        if(num < (*raiz)->valor)
-            inserir_versao_2(&((*raiz)->esquerda), num);
-        else
-            inserir_versao_2(&((*raiz)->direita), num);
-    }
-}
-
-void inserir_versao_3(NoArv **raiz, int num){
+void inserir(NoArv **raiz, int num){
     NoArv *aux = *raiz;
     while(aux){
         if(num < aux->valor)
@@ -54,19 +22,7 @@ void inserir_versao_3(NoArv **raiz, int num){
     *raiz = aux;
 }
 
-NoArv* buscar_versao_1(NoArv *raiz, int num){
-    if(raiz){
-        if(num == raiz->valor)
-            return raiz;
-        else if(num < raiz->valor)
-            return buscar_versao_1(raiz->esquerda, num);
-        else
-            return buscar_versao_1(raiz->direita, num);
-    }
-    return NULL;
-}
-
-NoArv* buscar_versao_2(NoArv *raiz, int num){
+NoArv* buscar(NoArv *raiz, int num){
     while(raiz){
         if(num < raiz->valor)
             raiz = raiz->esquerda;
@@ -78,73 +34,36 @@ NoArv* buscar_versao_2(NoArv *raiz, int num){
     return NULL;
 }
 
-int altura(NoArv *raiz){
-    if(raiz == NULL){
-        return -1;
-    }
-    else{
-        int esq = altura(raiz->esquerda);
-        int dir = altura(raiz->direita);
-        if(esq > dir)
-            return esq + 1;
-        else
-            return dir + 1;
-    }
-}
-
-int quantidade_nos(NoArv *raiz){
-    if(raiz == NULL)
-        return 0;
-    else
-        return 1 + quantidade_nos(raiz->esquerda) + quantidade_nos(raiz->direita);
-
-    // operador ternÃ¡rio
-    //return (raiz == NULL)? 0: 1 + quantidade_nos(raiz->esquerda) + quantidade_nos(raiz->direita);
-}
-
-int quantidade_folhas(NoArv *raiz){
-    if(raiz == NULL)
-        return 0;
-    else if(raiz->esquerda == NULL && raiz->direita == NULL)
-        return 1;
-    else
-        return quantidade_folhas(raiz->esquerda) + quantidade_folhas(raiz->direita);
-}
-
-// função para remover nós da Árvore binária
 NoArv* remover(NoArv *raiz, int chave) {
     if(raiz == NULL){
-        printf("Valor nao encontrado!\n");
+        printf("\n\tValor nao encontrado!\n");
         return NULL;
-    } else { // procura o nó a remover
+    } else { 
         if(raiz->valor == chave) {
-            // remove nós folhas (nós sem filhos)
             if(raiz->esquerda == NULL && raiz->direita == NULL) {
                 free(raiz);
-                printf("Elemento folha removido: %d !\n", chave);
+                printf("\n\tElemento folha removido: %d !\n", chave);
                 return NULL;
             }
             else{
-                // remover nós que possuem 2 filhos
                 if(raiz->esquerda != NULL && raiz->direita != NULL){
                     NoArv *aux = raiz->esquerda;
                     while(aux->direita != NULL)
                         aux = aux->direita;
                     raiz->valor = aux->valor;
                     aux->valor = chave;
-                    printf("Elemento trocado: %d !\n", chave);
+                    printf("\n\tElemento trocado: %d !\n", chave);
                     raiz->esquerda = remover(raiz->esquerda, chave);
                     return raiz;
                 }
                 else{
-                    // remover nós que possuem apenas 1 filho
                     NoArv *aux;
                     if(raiz->esquerda != NULL)
                         aux = raiz->esquerda;
                     else
                         aux = raiz->direita;
                     free(raiz);
-                    printf("Elemento com 1 filho removido: %d !\n", chave);
+                    printf("\n\tElemento com 1 filho removido: %d !\n", chave);
                     return aux;
                 }
             }
@@ -158,76 +77,100 @@ NoArv* remover(NoArv *raiz, int chave) {
     }
 }
 
-void imprimir_versao_1(NoArv *raiz){
+void imprimir_preorder(NoArv *raiz){
     if(raiz){
         printf("%d ", raiz->valor);
-        imprimir_versao_1(raiz->esquerda);
-        imprimir_versao_1(raiz->direita);
+        imprimir_preorder(raiz->esquerda);
+        imprimir_preorder(raiz->direita);
     }
 }
 
-void imprimir_versao_2(NoArv *raiz){
+void imprimir_inorder(NoArv *raiz){
     if(raiz){
-        imprimir_versao_2(raiz->esquerda);
+        imprimir_inorder(raiz->esquerda);
         printf("%d ", raiz->valor);
-        imprimir_versao_2(raiz->direita);
+        imprimir_inorder(raiz->direita);
     }
+}
+
+void imprimir_postorder(NoArv *raiz){
+    if(raiz){
+        imprimir_postorder(raiz->esquerda);
+        imprimir_postorder(raiz->direita);
+        printf("%d ", raiz->valor);
+    }
+}
+
+void menu(void){
+	system("cls");
+    printf("\t|--------------------|\n");
+	printf("\t|                    |\n");
+	printf("\t|   MENU PRINCIPAL   |\n");
+	printf("\t|                    |\n");
+	printf("\t|--------------------|\n\n");  
+	printf("\t   0 - Sair\n");
+    printf("\t   1 - Inserir\n");
+    printf("\t   2 - Imprimir\n");
+    printf("\t   3 - Buscar\n");
+    printf("\t   4 - Remover\n");
 }
 
 int main(){
 
     NoArv *busca, *raiz = NULL;
-    int opcao, valor;
+    int opcao, opcao2, valor;
 
     do{
-        printf("\n\t0 - Sair\n\t1 - Inserir\n\t2 - Imprimir\n\t3 - Buscar\n\t4 - Altura\n\t5 - Tamanho\n\t6 - Folhas\n\t7 - Remover\n");
-        scanf("%d", &opcao);
+        menu();
+		scanf("%d", &opcao);
 
         switch(opcao){
+        
         case 1:
+        	system("cls");
             printf("\n\tDigite um valor: ");
             scanf("%d", &valor);
-            //raiz = inserir_versao_1(raiz, valor);
-            //inserir_versao_2(&raiz, valor);
-            inserir_versao_3(&raiz, valor);
-            break;
+            inserir(&raiz, valor);
+            printf("\n\tElemento %d inserido, qualquer tecla para voltar ao menu\n\t", valor);
+			fflush(stdin); getch();
+            break;    
         case 2:
-            printf("\n\tPrimeira impressao:\n\t");
-            imprimir_versao_1(raiz);
+        	system("cls");
+            printf("\n\tImpressao preorder:\n\t");
+            imprimir_preorder(raiz);
             printf("\n");
-            printf("\n\tSegunda impressao:\n\t");
-            imprimir_versao_2(raiz);
+            printf("\n\tImpressao inorder:\n\t");
+            imprimir_inorder(raiz);
             printf("\n");
+            printf("\n\tImpressao postorder:\n\t");
+            imprimir_postorder(raiz);
+            printf("\n");
+            printf("\n\tImpressao realizada, pressione qualquer tecla para voltar ao menu\n\t");
+			fflush(stdin); getch();
             break;
         case 3:
+        	system("cls");
             printf("\n\tDigite o valor a ser procurado: ");
             scanf("%d", &valor);
-            //busca = buscar_versao_1(raiz, valor);
-            busca = buscar_versao_2(raiz, valor);
+            busca = buscar(raiz, valor);
             if(busca)
                 printf("\n\tValor encontrado: %d\n", busca->valor);
             else
                 printf("\n\tValor nao encontrado!\n");
+            printf("\n\tPressione qualquer tecla para voltar ao menu\n\t");
+			fflush(stdin); getch();
             break;
         case 4:
-            printf("\n\tAltura da arvore: %d\n\n", altura(raiz));
-            break;
-        case 5:
-            printf("\n\tQuantidade de nos: %d\n", quantidade_nos(raiz));
-            break;
-        case 6:
-            printf("\n\tQuantidade folhas: %d\n", quantidade_folhas(raiz));
-            break;
-        case 7:
-            printf("\t");
-            imprimir_versao_2(raiz);
+        	system("cls");
             printf("\n\tDigite o valor a ser removido: ");
             scanf("%d", &valor);
             raiz = remover(raiz, valor);
+            printf("\n\tPressione qualquer tecla para voltar ao menu\n\t");
+			fflush(stdin); getch();
             break;
         default:
             if(opcao != 0)
-                printf("\n\tOpcao invalida!!!\n");
+            	printf("\n\tOpcao invalida!!!\n");
         }
     }while(opcao != 0);
 
