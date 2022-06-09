@@ -118,7 +118,7 @@ void menu(void){
 int main(){
 
     NoArv *busca, *raiz = NULL;
-    int opcao, opcao2, valor;
+    int opcao, valor;
 
     do{
         menu();
