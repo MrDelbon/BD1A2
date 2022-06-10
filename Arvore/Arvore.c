@@ -118,7 +118,9 @@ void menu(void){
 int main(){
 
     NoArv *busca, *raiz = NULL;
-    int opcao, opcao2, valor;
+    int opcao, opcao2, valor, qtd, i;
+    time_t t;
+	srand((unsigned) time(&t));
 
     do{
         menu();
@@ -136,7 +138,12 @@ int main(){
 				switch(opcao2){
 			    	case 1:
 			    		system("cls");
-			        	printf("\n\tFuncao em desenvolvimento");
+			        	printf("\n\tDigite uma quantidade de numeros: ");
+                        scanf("%d", &qtd);
+                        for (i = 0; i < qtd; i++){
+                            valor = rand() % 500;
+                            inserir(&raiz, valor);
+                        }
 			        	fflush(stdin);
 						getch();
 						break;	
